@@ -1,0 +1,35 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:physics` runs it.
+;;
+;; README "Robotics premise": a plant scheduling/logistics coordination robot
+;; schedules a cement/stone/mineral-products machine-operator crew, logs runs
+;; and materials usage and coordinates raw-material/spare-parts supply; it
+;; never operates forming, pressing or kiln machinery. Its physical work is
+;; plant logistics: moving pallets of fresh concrete products, and the curing
+;; chamber dwell those pallets have to wait out before they may be moved.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isco-8114"
+ :cases
+ [{:id :block-pallet-to-yard
+   :kind :transport
+   :procedure "pallet AMR carries a pallet of cured concrete blocks from the curing chamber to the stacking yard"
+   :params {:mass-kg 350.0 :distance-m 80.0 :v-max-mps 1.2 :a-max-mps2 0.3
+            :brake-decel-mps2 1.0 :drive-force-n 800.0 :crr 0.02
+            :cog-height-m 0.35 :payload-cog-height-m 0.55 :support-half-length-m 0.55
+            :max-time-s 1800.0}
+   :sweep {:param :payload-kg :values [300.0 600.0 1000.0 1400.0 1800.0]}
+   :quantity :cycle-time-s
+   :limit {:max 90.0 :basis "estimate: one pallet leg within the 90 s cycle of the block machine's board return"}}
+  {:id :precast-core-in-curing-chamber
+   :kind :thermal
+   :procedure "precast element sits in a 60 °C curing chamber; it may be moved once its mid-plane (adiabatic) reaches 50 °C"
+   :params {:conductivity-w-mk 1.8 :density-kg-m3 2300.0 :specific-heat-j-kgk 900.0
+            :t0-c 20.0 :t-hot-c 60.0 :h-front-w-m2k 15.0 :h-back-w-m2k 0.0
+            :threshold-c 50.0 :duration-s 43200.0 :nodes 21}
+   :sweep {:param :thickness-m :values [0.03 0.05 0.075 0.10 0.15]}
+   :quantity :time-to-threshold-s
+   :limit {:max 14400.0 :basis "estimate: a 4-hour chamber dwell in the plant's curing schedule"}
+   :boundary {:lo 0.01 :hi 0.3}}]}
