@@ -1,7 +1,7 @@
 (ns mineralplant.store
   "SSoT for the ISCO-08 8114 cement, stone and other mineral products
   machine operator plant scheduling/logistics coordination actor
-  (itonami actor pattern, ADR-2607121000 / CLAUDE.md Actors section;
+  (itonami actor pattern, ADR-2607121000 / AGENTS.md Actors section;
   README's 'Robotics premise' — a plant scheduling/logistics
   coordination robot performs crew scheduling, production-run/
   inventory/progress record logging and raw-material/spare-parts
